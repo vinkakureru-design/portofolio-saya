@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- ============================================================
+       PANDUAN KUSTOMISASI
+       Cari & ganti teks berikut di seluruh file ini:
+       - [NAMA LENGKAP]   → nama kamu
+       - [NAMA SINGKAT]   → nama depan / alias
+       - [TAGLINE]        → deskripsi singkat
+       - [DESKRIPSI_1]    → paragraf 1 tentang diri
+       - [DESKRIPSI_2]    → paragraf 2 tentang diri
+       - [EMAIL]          → email kamu
+       - [LINK_GITHUB]    → URL GitHub
+       - [LINK_LINKEDIN]  → URL LinkedIn
+       ============================================================ -->
+  <title>Vinka — Web Developer ウェブ開発者</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <!-- Google Fonts: Zen Maru Gothic (JP feel) + Raleway (display) + Noto Sans JP -->
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Raleway:ital,wght@0,300;0,700;0,900;1,700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --bg:          #0b0b14;        /* deep midnight navy */
+      --bg2:         #10101e;
+      --panel:       #14142a;
+      --sakura:      #ff6eb4;        /* hot pink */
+      --sakura-dim:  #c94f88;
+      --neon:        #00f5d4;        /* aqua neon */
+      --neon2:       #ffe74c;        /* yellow neon */
+      --neon3:       #a855f7;        /* purple */
+      --text:        #f0eeff;
+      --text-muted:  #8888b0;
+      --border:      rgba(255,110,180,0.15);
+      --glow-pink:   0 0 24px rgba(255,110,180,0.5);
+      --glow-teal:   0 0 24px rgba(0,245,212,0.4);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    .cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 12px; height: 12px;
+      background: var(--sakura);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .15s, height .15s, background .15s;
+      mix-blend-mode: screen;
+    }
+    .cursor-ring {
+      position: fixed;
+      top: 0; left: 0;
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--sakura);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: all .08s linear;
+      opacity: 0.5;
+    }
+    body:hover .cursor { width: 14px; height: 14px; }
+
+    /* ── SAKURA CANVAS ── */
+    #sakura-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── SCAN LINE OVERLAY ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0,0,0,0.04) 3px,
+        rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* content sits above overlays */
+    .z-content { position: relative; z-index: 2; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: rgba(11,11,20,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      height: 68px;
+      gap: 0;
+    }
+    .nav-brand {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 900;
+      font-size: 1.3rem;
+      color: var(--text);
+      text-decoration: none;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-brand .brand-jp {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 0.7rem;
+      color: var(--sakura);
+      letter-spacing: 0.15em;
+      display: block;
+      line-height: 1;
+    }
+    .nav-brand .brand-dot { color: var(--sakura); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      margin: 0 0 0 auto;
+      padding: 0;
+      gap: 0;
+      height: 100%;
+    }
+    .nav-links li a {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0 22px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color .2s;
+      position: relative;
+    }
+    .nav-links li a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; right: 50%;
+      height: 2px;
+      background: var(--sakura);
+      transition: left .2s, right .2s;
+      box-shadow: var(--glow-pink);
+    }
+    .nav-links li a:hover { color: var(--sakura); }
+    .nav-links li a:hover::after { left: 0; right: 0; }
+    .nav-contact a {
+      margin: 0 16px;
+      background: linear-gradient(135deg, var(--sakura), var(--neon3));
+      color: #fff !important;
+      padding: 9px 22px !important;
+      height: auto !important;
+      border-radius: 100px;
+      font-weight: 700 !important;
+      letter-spacing: 0.05em !important;
+    }
+    .nav-contact a::after { display: none; }
+    .nav-contact a:hover { opacity: 0.85; }
+
+    /* mobile */
+    .nav-toggle {
+      display: none;
+      background: none; border: none;
+      color: var(--text); font-size: 1.4rem;
+      cursor: pointer; padding: 0 20px; margin-left: auto;
+    }
+    @media(max-width:768px){
+      .nav-toggle { display:flex; align-items:center; }
+      .nav-links { display:none; flex-direction:column; position:absolute; top:68px; left:0; right:0; background:rgba(11,11,20,0.97); height:auto; border-bottom:1px solid var(--border); }
+      .nav-links.open { display:flex; }
+      .nav-links li a { height:52px; padding:0 28px; }
+      .nav-contact a { margin:8px 28px; }
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: calc(100vh - 68px);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 100px 0;
+    }
+    /* Gradient BG */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 80% 40%, rgba(255,110,180,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 50% at 10% 80%, rgba(0,245,212,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 30% 40% at 50% 10%, rgba(168,85,247,0.08) 0%, transparent 60%);
+    }
+    /* Big JP background kanji */
+    .hero-kanji {
+      position: absolute;
+      right: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-weight: 900;
+      font-size: clamp(180px, 25vw, 320px);
+      color: rgba(255,110,180,0.04);
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+      letter-spacing: -10px;
+    }
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow-line {
+      width: 40px; height: 1.5px;
+      background: var(--sakura);
+      box-shadow: var(--glow-pink);
+    }
+    .hero-eyebrow span {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      color: var(--sakura);
+      text-transform: uppercase;
+    }
+    .hero-title {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 900;
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 16px;
+    }
+    .hero-title .t-pink { color: var(--sakura); text-shadow: var(--glow-pink); }
+    .hero-title .t-neon { color: var(--neon); text-shadow: var(--glow-teal); }
+    .hero-title-jp {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1rem, 2.5vw, 1.6rem);
+      color: var(--text-muted);
+      letter-spacing: 0.3em;
+      margin-bottom: 32px;
+    }
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.85;
+      max-width: 500px;
+      margin-bottom: 44px;
+    }
+    .hero-btns { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 60px; }
+
+    .btn-sakura {
+      background: linear-gradient(135deg, var(--sakura), var(--neon3));
+      color: #fff;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: 0.05em;
+      padding: 14px 34px;
+      border-radius: 100px;
+      border: none;
+      text-decoration: none;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 24px rgba(255,110,180,0.3);
+    }
+    .btn-sakura::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--neon3), var(--sakura));
+      opacity: 0;
+      transition: opacity .25s;
+    }
+    .btn-sakura:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(255,110,180,0.5); color:#fff; }
+    .btn-sakura:hover::before { opacity: 1; }
+    .btn-sakura span { position: relative; z-index: 1; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: 0.05em;
+      padding: 13px 34px;
+      border-radius: 100px;
+      border: 1.5px solid rgba(255,110,180,0.35);
+      text-decoration: none;
+      display: inline-block;
+      transition: border-color .2s, color .2s, box-shadow .2s;
+    }
+    .btn-ghost:hover { border-color: var(--sakura); color: var(--sakura); box-shadow: var(--glow-pink); }
+
+    /* hero status */
+    .hero-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,245,212,0.08);
+      border: 1px solid rgba(0,245,212,0.2);
+      border-radius: 100px;
+      padding: 8px 20px;
+      font-size: 0.78rem;
+      color: var(--neon);
+      font-weight: 500;
+    }
+    .status-dot {
+      width: 7px; height: 7px;
+      background: var(--neon);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--neon);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* hero right – avatar box */
+    .hero-avatar-box {
+      position: relative;
+      width: 340px;
+      margin: 0 auto;
+    }
+    .avatar-frame {
+      width: 300px; height: 300px;
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      background: var(--panel);
+      margin: 20px auto;
+    }
+    .avatar-frame img { width:100%; height:100%; object-fit:cover; display:block; }
+    .avatar-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      color: rgba(255,110,180,0.25);
+      font-size: 5rem;
+      gap: 10px;
+    }
+    .avatar-placeholder span {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: rgba(255,110,180,0.2);
+      font-family: 'Zen Maru Gothic', sans-serif;
+    }
+    /* corner decorations */
+    .avatar-frame::before, .avatar-frame::after {
+      content: '';
+      position: absolute;
+      width: 24px; height: 24px;
+      border-color: var(--sakura);
+      border-style: solid;
+      box-shadow: var(--glow-pink);
+    }
+    .avatar-frame::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-radius: 24px 0 0 0; }
+    .avatar-frame::after  { bottom:-1px; right:-1px; border-width: 0 2px 2px 0; border-radius: 0 0 24px 0; }
+    /* floating badges */
+    .float-badge {
+      position: absolute;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 0.75rem;
+      backdrop-filter: blur(8px);
+      animation: float 3s ease-in-out infinite;
+    }
+    .float-badge .badge-num {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 900;
+      font-size: 1.6rem;
+      line-height: 1;
+      display: block;
+    }
+    .float-badge.b1 { top: 0; right: -20px; animation-delay: 0s; }
+    .float-badge.b1 .badge-num { color: var(--sakura); text-shadow: var(--glow-pink); }
+    .float-badge.b2 { bottom: 20px; left: -20px; animation-delay: 1s; }
+    .float-badge.b2 .badge-num { color: var(--neon); text-shadow: var(--glow-teal); }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 110px 0; }
+    .section-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .section-eyebrow-line {
+      width: 32px; height: 1.5px;
+      background: var(--sakura);
+      box-shadow: var(--glow-pink);
+    }
+    .section-eyebrow span {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.25em;
+      color: var(--sakura);
+      text-transform: uppercase;
+    }
+    .section-title-main {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      letter-spacing: -1px;
+      line-height: 1.05;
+      margin-bottom: 12px;
+    }
+    .section-jp {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--bg2); }
+    .about-text p {
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+    .about-text p strong { color: var(--text); font-weight: 700; }
+    /* skill chips */
+    .skill-section-label {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      margin-top: 28px;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 7px 18px;
+      border-radius: 100px;
+      border: 1px solid;
+      transition: box-shadow .2s, transform .2s;
+      cursor: default;
+      white-space: nowrap;
+    }
+    .chip:hover { transform: translateY(-2px); }
+    .chip-pink  { border-color: rgba(255,110,180,0.4); color: var(--sakura); background: rgba(255,110,180,0.06); }
+    .chip-pink:hover  { box-shadow: var(--glow-pink); }
+    .chip-teal  { border-color: rgba(0,245,212,0.4);  color: var(--neon);   background: rgba(0,245,212,0.06); }
+    .chip-teal:hover  { box-shadow: var(--glow-teal); }
+    .chip-purp  { border-color: rgba(168,85,247,0.4); color: var(--neon3);  background: rgba(168,85,247,0.06); }
+    .chip-purp:hover  { box-shadow: 0 0 16px rgba(168,85,247,0.4); }
+
+    /* side illustration */
+    .about-illus {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    .illus-box {
+      position: relative;
+      width: 280px;
+    }
+    .illus-circle {
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,110,180,0.12), transparent 70%);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto;
+      position: relative;
+    }
+    .illus-circle .jp-center {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-weight: 900;
+      font-size: 5rem;
+      color: rgba(255,110,180,0.3);
+      text-shadow: var(--glow-pink);
+    }
+    .illus-orbit {
+      position: absolute;
+      inset: -30px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255,110,180,0.15);
+      animation: spin 20s linear infinite;
+    }
+    .illus-orbit-dot {
+      position: absolute;
+      top: 50%; left: -6px;
+      width: 12px; height: 12px;
+      background: var(--sakura);
+      border-radius: 50%;
+      box-shadow: var(--glow-pink);
+      transform: translateY(-50%);
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── PORTFOLIO ── */
+    #portfolio { background: var(--bg); }
+    .proj-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform .25s, box-shadow .25s, border-color .25s;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .proj-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,110,180,0.03), transparent);
+      border-radius: 20px;
+      pointer-events: none;
+    }
+    .proj-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(255,110,180,0.15);
+      border-color: rgba(255,110,180,0.35);
+    }
+    .proj-thumb {
+      height: 200px;
+      background: linear-gradient(135deg, #14142a, #1e1036);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+      font-size: 4rem;
+    }
+    /* big JP char in thumb bg */
+    .proj-thumb::before {
+      content: attr(data-jp);
+      position: absolute;
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-weight: 900;
+      font-size: 7rem;
+      opacity: 0.07;
+      color: var(--sakura);
+      right: 10px; bottom: -10px;
+    }
+    .proj-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .proj-body { padding: 28px; flex: 1; display: flex; flex-direction: column; }
+    .proj-genre {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .proj-name {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 900;
+      font-size: 1.2rem;
+      letter-spacing: -0.3px;
+      margin-bottom: 10px;
+    }
+    .proj-desc { font-size: 0.86rem; color: var(--text-muted); line-height: 1.75; flex: 1; margin-bottom: 20px; }
+    .proj-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px; }
+    .proj-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.05);
+      color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .proj-link {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: gap .2s;
+    }
+    .proj-link:hover { gap: 14px; }
+
+    /* ── EXPERIENCE ── */
+    #experience { background: var(--bg2); }
+    .exp-timeline { position: relative; padding-left: 32px; }
+    .exp-timeline::before {
+      content: '';
+      position: absolute;
+      top: 8px; bottom: 0; left: 7px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--sakura), transparent);
+      box-shadow: var(--glow-pink);
+    }
+    .exp-item { position: relative; margin-bottom: 52px; }
+    .exp-item:last-child { margin-bottom: 0; }
+    .exp-dot {
+      position: absolute;
+      left: -29px; top: 5px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--sakura);
+      box-shadow: var(--glow-pink);
+      border: 2px solid var(--bg2);
+    }
+    .exp-period {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      color: var(--sakura);
+      margin-bottom: 8px;
+    }
+    .exp-role {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 900;
+      font-size: 1.15rem;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+    .exp-company { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 500; }
+    .exp-detail { font-size: 0.875rem; color: var(--text-muted); line-height: 1.8; }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--bg);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #contact::before {
+      content: 'お問い合わせ';
+      position: absolute;
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-weight: 900;
+      font-size: clamp(60px, 12vw, 140px);
+      color: rgba(255,110,180,0.04);
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: 0.1em;
+    }
+    .contact-title {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .contact-title .t-pink { color: var(--sakura); text-shadow: var(--glow-pink); }
+    .contact-sub {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+      margin-bottom: 52px;
+    }
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+      padding: 18px 40px;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      margin-bottom: 40px;
+      transition: border-color .2s, color .2s, box-shadow .2s;
+    }
+    .contact-email:hover {
+      border-color: var(--sakura);
+      color: var(--sakura);
+      box-shadow: var(--glow-pink);
+    }
+    .social-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; }
+    .soc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.82rem;
+      text-decoration: none;
+      transition: border-color .2s, color .2s, box-shadow .2s;
+    }
+    .soc-btn:hover { border-color: var(--sakura); color: var(--sakura); box-shadow: var(--glow-pink); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: 'Zen Maru Gothic', sans-serif;
+      letter-spacing: 0.05em;
+    }
+    footer .f-pink { color: var(--sakura); }
+
+    /* ── REVEAL ANIMATION ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: .1s; }
+    .reveal-d2 { transition-delay: .2s; }
+    .reveal-d3 { transition-delay: .3s; }
+  </style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curRing"></div>
+
+<!-- Sakura canvas -->
+<canvas id="sakura-canvas"></canvas>
+
+<!-- ══════════ NAVBAR ══════════ -->
+<nav class="navbar z-content">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="#" class="nav-brand">
+        <div>
+          <span class="brand-dot">[</span>Alvino<span class="brand-dot">]</span>
+          <span class="brand-jp">ウェブ開発者</span>
+        </div>
+      </a>
+      <button class="nav-toggle" id="navToggle"><i class="bi bi-list"></i></button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About · 自己紹介</a></li>
+        <li><a href="#portfolio">Works · 作品</a></li>
+        <li><a href="#experience">History · 経歴</a></li>
+        <li class="nav-contact"><a href="#contact">Contact →</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="hero" class="z-content">
+  <div class="hero-bg"></div>
+  <div class="hero-kanji">開発</div>
+  <div class="container">
+    <div class="row align-items-center gy-5">
+      <div class="col-lg-7">
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-line"></div>
+          <span>Web Developer · ウェブ開発者</span>
+        </div>
+        <h1 class="hero-title">
+          <!-- Baris 1: Nama depan -->
+          [ALVINO <br>
+          <span class="t-pink">DESU]</span>
+        </h1>
+        <div class="hero-title-jp">ウェブ開発者 &amp; クリエイター</div>
+        <p class="hero-desc">
+          [TAGLINE] — Membangun pengalaman web yang fungsional, indah, dan berkesan. 一緒に素晴らしいものを作りましょう。
+        </p>
+        <div class="hero-btns">
+          <a href="#portfolio" class="btn-sakura"><span>✦ Lihat Karya Saya</span></a>
+          <a href="#contact" class="btn-ghost">Kontak →</a>
+        </div>
+        <div class="hero-status">
+          <div class="status-dot"></div>
+          <!-- Available for freelance · フリーランス募集中 -->
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="hero-avatar-box">
+          <div class="avatar-frame">
+            <!--
+              Ganti placeholder dengan foto kamu:
+              <img src="img/foto.jpg" alt="[NAMA LENGKAP]">
+            -->
+            <div class="avatar-placeholder">
+              <i class="bi bi-person-hearts"></i>
+              <span>img/foto.jpg</span>
+            </div>
+          </div>
+          <div class="float-badge b1">
+            <strong class="badge-num">6+</strong>
+            <span style="font-size:.72rem;color:var(--text-muted);">Months Exp.</span>
+          </div>
+          <div class="float-badge b2">
+            <strong class="badge-num">5+</strong>
+            <span style="font-size:.72rem;color:var(--text-muted);">Projects</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ABOUT ══════════ -->
+<section id="about" class="z-content">
+  <div class="container">
+    <div class="row gy-5 align-items-center">
+      <div class="col-lg-5 reveal">
+        <div class="about-illus">
+          <div class="illus-box">
+            <div class="illus-circle">
+              <span class="jp-center">私</span>
+              <div class="illus-orbit">
+                <div class="illus-orbit-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="section-eyebrow reveal">
+          <div class="section-eyebrow-line"></div>
+          <span>About Me · 自己紹介</span>
+        </div>
+        <h2 class="section-title-main reveal">Siapa <span style="color:var(--sakura);text-shadow:var(--glow-pink)">Saya?</span></h2>
+        <div class="section-jp reveal">自己紹介 — じこしょうかい</div>
+        <div class="about-text reveal">
+          <!-- Ganti dengan deskripsi dirimu -->
+          <!-- <p>[DESKRIPSI_1] — Ceritakan latar belakang dan passionmu di sini. Siapa kamu? Apa yang kamu sukai?</p>
+          <p>[DESKRIPSI_2] — Pengalaman atau hal menarik yang membuat kamu unik sebagai developer.</p> -->
+          <p>Halo! Saya Alvino, seorang pelajar aktif yang memiliki ketertarikan besar di dunia teknologi dan pengembangan web. Sejak muda, saya sudah tertarik dengan bagaimana website dan aplikasi dibuat, dan saya senang belajar hal baru di bidang ini.</p>
+          <p>Saya adalah seorang pelajar aktif yang memiliki ketertarikan besar di dunia teknologi dan pengembangan web. Sejak muda, saya sudah tertarik dengan bagaimana website dan aplikasi dibuat, dan saya senang belajar hal baru di bidang ini.</p>
+          <p>Bahasa yang saya dalami adalah C# berbasis ASP.NET yang menjadi karir utama, sekaligus beradaptasi dengan adanya AI yang membantu, mempermudah, dan mempersingkat waktu pembuatan proyek.</p>
+          
+        </div>
+
+        <div class="skill-section-label reveal">フロントエンド · Frontend</div>
+        <div class="chips reveal reveal-d1">
+          <span class="chip chip-pink">HTML</span>
+          <span class="chip chip-pink">CSS</span>
+          <!-- <span class="chip chip-pink">JavaScript</span> -->
+          <!-- <span class="chip chip-pink">React.js</span> -->
+          <span class="chip chip-pink">Bootstrap</span>
+        </div>
+        <div class="skill-section-label reveal">バックエンド · Backend</div>
+        <div class="chips reveal reveal-d2">
+          <span class="chip chip-teal">ASP.NET</span>
+          <span class="chip chip-teal">PHP</span>
+          <span class="chip chip-teal">Laravel</span>
+          <span class="chip chip-teal">MySQL</span>
+          <span class="chip chip-teal">SQL Server</span>
+        </div>
+        <div class="skill-section-label reveal">ツール · Tools</div>
+        <div class="chips reveal reveal-d3">
+          <span class="chip chip-purp">Git</span>
+          <span class="chip chip-purp">Figma</span>
+          <span class="chip chip-purp">VS Code</span>
+          <span class="chip chip-purp">Visual Studio</span>
+          <span class="chip chip-purp">Antigravity</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PORTFOLIO ══════════ -->
+<section id="portfolio" class="z-content">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="section-eyebrow justify-content-center reveal">
+        <div class="section-eyebrow-line"></div>
+        <span>My Works · 作品集</span>
+        <div class="section-eyebrow-line"></div>
+      </div>
+      <h2 class="section-title-main reveal">Proyek <span style="color:var(--sakura);text-shadow:var(--glow-pink)">Pilihan</span></h2>
+      <div class="section-jp reveal">さくひん — 作品</div>
+    </div>
+    <div class="row g-4">
+
+      <!-- CARD 1 -->
+      <div class="col-md-6 col-lg-4 reveal">
+        <div class="proj-card">
+          <div class="proj-thumb" data-jp="開">
+            <!--
+              Ganti dengan: <img src="img/project1.jpg" alt="Proyek 1">
+            -->
+            <span>💻</span>
+          </div>
+          <div class="proj-body">
+            <div class="proj-genre" style="color:var(--sakura)">ウェブアプリ · Web App</div>
+            <div class="proj-name">Buku Menu Cafe</div>
+            <div class="proj-tags">
+              <span class="proj-tag">Bootsrap </span>
+              <span class="proj-tag">ASP.NET</span>
+              <span class="proj-tag">SQL Server</span>
+            </div>
+            <!-- <p class="proj-desc">Deskripsi singkat proyek pertama. Apa masalah yang diselesaikan dan bagaimana dampaknya?</p> -->
+            <p class="proj-desc">Sebuah website untuk menampilkan menu-menu yang ada di cafe, mengubah menu tradisonal menjadi berbasis website untuk mempermudah dalam pelayanan dan pemesanan. </p>
+            <a href="#" class="proj-link" style="color:var(--sakura)">見る · Lihat <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="col-md-6 col-lg-4 reveal reveal-d1">
+        <div class="proj-card">
+          <div class="proj-thumb" data-jp="店">
+            <span>🛒</span>
+          </div>
+          <div class="proj-body">
+            <div class="proj-genre" style="color:var(--neon)">ECサイト · E-Commerce</div>
+            <div class="proj-name">Nama Proyek 2</div>
+            <div class="proj-tags">
+              <span class="proj-tag">Laravel</span>
+              <span class="proj-tag">Bootstrap</span>
+              <span class="proj-tag">MySQL</span>
+            </div>
+            <p class="proj-desc">Deskripsi singkat proyek kedua. Teknologi apa yang dipakai dan tantangan apa yang berhasil diatasi?</p>
+            <a href="#" class="proj-link" style="color:var(--neon)">見る · Lihat <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="col-md-6 col-lg-4 reveal reveal-d2">
+        <div class="proj-card">
+          <div class="proj-thumb" data-jp="夢">
+            <span>📱</span>
+          </div>
+          <div class="proj-body">
+            <div class="proj-genre" style="color:var(--neon3)">ランディング · Landing Page</div>
+            <div class="proj-name">Nama Proyek 3</div>
+            <div class="proj-tags">
+              <span class="proj-tag">HTML</span>
+              <span class="proj-tag">CSS</span>
+              <span class="proj-tag">JavaScript</span>
+            </div>
+            <p class="proj-desc">Deskripsi singkat proyek ketiga. Tambahkan angka atau metrik yang membuktikan keberhasilannya.</p>
+            <a href="#" class="proj-link" style="color:var(--neon3)">見る · Lihat <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ EXPERIENCE ══════════ -->
+<section id="experience" class="z-content">
+  <div class="container">
+    <div class="row gy-5">
+      <div class="col-lg-4 reveal">
+        <div class="section-eyebrow">
+          <div class="section-eyebrow-line"></div>
+          <span>History · 経歴</span>
+        </div>
+        <h2 class="section-title-main">Perjalanan<br><span style="color:var(--sakura);text-shadow:var(--glow-pink)">Karir</span></h2>
+        <div class="section-jp">けいれき — 経歴</div>
+        <p style="color:var(--text-muted);font-size:.9rem;line-height:1.8;">
+          Perjalanan saya membangun keahlian sebagai Web Developer — dari intern hingga sekarang.
+        </p>
+      </div>
+      <div class="col-lg-8 reveal reveal-d1">
+        <div class="exp-timeline">
+          <div class="exp-item">
+            <div class="exp-dot"></div>
+            <div class="exp-period">2026 — 現在 (Sekarang)</div>
+            <div class="exp-role">Beginer Web Developer</div>
+            <div class="exp-company">SMKN 17 Jakarta · Pelajar Aktif · 学生</div>
+            <!-- <p class="exp-detail">Deskripsi tanggung jawab dan pencapaian kamu. Gunakan angka jika memungkinkan.</p> -->
+            <p class="exp-detail">Masih dalam tahap belajar dan mendalami ilmu yang ada di sekolah, namun sudah mulai mencoba untuk membuat project sendiri.</p>
+          </div>
+          <div class="exp-item">
+            <div class="exp-dot" style="background:var(--neon);box-shadow:var(--glow-teal);"></div>
+            <div class="exp-period">2023 — 2025</div>
+            <div class="exp-role">Traning Web Developer</div>
+            <div class="exp-company">SMKN 17 Jakarta · Pelajar Aktif · 学生</div>
+            <!-- <p class="exp-detail">Pengalaman di perusahaan sebelumnya. Proyek apa yang paling berkesan?</p> -->
+            <p class="exp-detail">Masih dalam tahap belajar dan mendalami ilmu yang ada di sekolah, namun sudah mulai mencoba untuk membuat project sendiri.</p>
+          </div>
+          <!-- <div class="exp-item">
+            <div class="exp-dot" style="background:var(--neon3);box-shadow:0 0 16px rgba(168,85,247,.5);"></div>
+            <div class="exp-period">2020 — 2021</div>
+            <div class="exp-role">Frontend Developer Intern</div>
+            <div class="exp-company">Nama Startup · Magang · インターン</div>
+            <p class="exp-detail">Pengalaman pertama di dunia kerja. Apa yang kamu pelajari dan kontribusikan?</p>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact" class="z-content">
+  <div class="container">
+    <div class="section-eyebrow justify-content-center reveal">
+      <div class="section-eyebrow-line"></div>
+      <span>Contact · お問い合わせ</span>
+      <div class="section-eyebrow-line"></div>
+    </div>
+    <h2 class="contact-title reveal">
+      Punya Ide<br>
+      <span class="t-pink">Keren?</span>
+    </h2>
+    <div class="contact-sub reveal">お問い合わせ — おといあわせ</div>
+    <!-- <p class="reveal" style="color:var(--text-muted);font-size:.95rem;line-height:1.8;max-width:480px;margin:0 auto 44px;">
+      Saya terbuka untuk proyek freelance, kolaborasi, atau posisi full-time. 一緒に作りましょう！
+    </p> -->
+    <!-- Ganti [EMAIL] dengan email kamu -->
+    <!-- <div class="reveal">
+      <a href="mailto:[EMAIL]" class="contact-email">
+        <i class="bi bi-envelope-fill" style="color:var(--sakura)"></i>
+        [EMAIL]
+      </a>
+    </div> -->
+    <div class="social-row reveal reveal-d1">
+      <a href="[LINK_GITHUB]"   target="_blank" class="soc-btn"><i class="bi bi-github"></i> GitHub</a>
+      <!-- <a href="[LINK_LINKEDIN]" target="_blank" class="soc-btn"><i class="bi bi-linkedin"></i> LinkedIn</a> -->
+      <a href="#"               class="soc-btn"><i class="bi bi-instagram"></i> Instagram</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="z-content">
+  <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+    <span>© 2026 <span class="f-pink">Alvino</span> — ウェブ開発者</span>
+    <span>Built with <span class="f-pink">Bootstrap 5</span> · 🌸</span>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ── CUSTOM CURSOR ── */
+const cur     = document.getElementById('cur');
+const curRing = document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cur.style.left=mx+'px'; cur.style.top=my+'px'; });
+(function animRing(){
+  rx += (mx-rx)*0.12; ry += (my-ry)*0.12;
+  curRing.style.left=rx+'px'; curRing.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+
+/* ── SAKURA PETALS ── */
+const canvas = document.getElementById('sakura-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+const PETAL_COUNT = 28;
+const petals = Array.from({length: PETAL_COUNT}, () => spawnPetal(true));
+
+function spawnPetal(random=false){
+  return {
+    x: Math.random()*W,
+    y: random ? Math.random()*H : -20,
+    size: 4 + Math.random()*7,
+    speed: 0.5 + Math.random()*1.2,
+    drift: (Math.random()-.5)*0.8,
+    rot: Math.random()*Math.PI*2,
+    rotSpeed: (Math.random()-.5)*0.04,
+    alpha: 0.3 + Math.random()*0.5,
+  };
+}
+function drawPetal(p){
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(p.rot);
+  ctx.globalAlpha = p.alpha;
+  ctx.fillStyle = '#ff6eb4';
+  ctx.beginPath();
+  ctx.ellipse(0, 0, p.size, p.size*0.6, 0, 0, Math.PI*2);
+  ctx.fill();
+  // inner highlight
+  ctx.fillStyle = 'rgba(255,200,220,0.4)';
+  ctx.beginPath();
+  ctx.ellipse(-p.size*.2, -p.size*.15, p.size*.35, p.size*.25, 0.5, 0, Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+}
+function animPetals(){
+  ctx.clearRect(0,0,W,H);
+  petals.forEach(p => {
+    p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    if(p.y > H+20) Object.assign(p, spawnPetal());
+    drawPetal(p);
+  });
+  requestAnimationFrame(animPetals);
+}
+animPetals();
+
+/* ── MOBILE NAV ── */
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+/* ── SCROLL REVEAL ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(el => {
+    if(el.isIntersecting){ el.target.classList.add('show'); observer.unobserve(el.target); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ── ACTIVE NAV ── */
+const sections = document.querySelectorAll('section[id]');
+const navAs    = document.querySelectorAll('.nav-links li:not(.nav-contact) a');
+window.addEventListener('scroll', () => {
+  let cur='';
+  sections.forEach(s => { if(window.scrollY >= s.offsetTop-90) cur=s.id; });
+  navAs.forEach(a => { a.style.color = a.getAttribute('href')==='#'+cur ? 'var(--sakura)' : ''; });
+});
+</script>
+</body>
+</html>
